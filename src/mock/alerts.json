@@ -1,0 +1,54 @@
+{
+  "alerts": [
+    {
+      "id": "alert_001",
+      "type": "drought",
+      "severity": "warning",
+      "title": "Dry Spell Warning",
+      "message": "Below-average rainfall expected in the next 2 weeks",
+      "date": "2025-10-11T08:00:00Z",
+      "location": "Nairobi Region",
+      "aiAdvice": "Consider mulching your crops to retain soil moisture. Prepare irrigation systems. Prioritize watering high-value crops."
+    },
+    {
+      "id": "alert_002",
+      "type": "pest",
+      "severity": "critical",
+      "title": "Fall Armyworm Outbreak",
+      "message": "High infestation reported in neighboring farms",
+      "date": "2025-10-10T14:30:00Z",
+      "location": "Central Kenya",
+      "aiAdvice": "Scout your maize fields daily. Apply approved pesticides early morning or late evening. Consider biological control methods."
+    },
+    {
+      "id": "alert_003",
+      "type": "flood",
+      "severity": "info",
+      "title": "Heavy Rainfall Expected",
+      "message": "Above-average rainfall predicted next week",
+      "date": "2025-10-09T10:00:00Z",
+      "location": "Western Region",
+      "aiAdvice": "Ensure proper drainage in your fields. Harvest mature crops if possible. Prepare for potential waterlogging."
+    },
+    {
+      "id": "alert_004",
+      "type": "growth",
+      "severity": "info",
+      "title": "Growth Stage Reminder",
+      "message": "Your maize crop is entering flowering stage",
+      "date": "2025-10-08T06:00:00Z",
+      "location": "Your Farm",
+      "aiAdvice": "Apply second top-dressing now. Monitor for pests especially fall armyworm. Ensure consistent moisture during this critical period."
+    },
+    {
+      "id": "alert_005",
+      "type": "weather",
+      "severity": "warning",
+      "title": "Temperature Spike",
+      "message": "Unusually high temperatures expected (30-33°C)",
+      "date": "2025-10-07T07:00:00Z",
+      "location": "Eastern Kenya",
+      "aiAdvice": "Increase watering frequency. Provide shade for livestock. Monitor for heat stress in animals and plants."
+    }
+  ]
+}

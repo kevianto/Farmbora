@@ -1,0 +1,97 @@
+{
+  "readings": {
+    "airTemperature": {
+      "value": 24.5,
+      "unit": "°C",
+      "status": "optimal",
+      "range": { "min": 20, "max": 28 }
+    },
+    "humidity": {
+      "value": 65,
+      "unit": "%",
+      "status": "optimal",
+      "range": { "min": 60, "max": 80 }
+    },
+    "soilPH": {
+      "value": 6.2,
+      "unit": "pH",
+      "status": "optimal",
+      "range": { "min": 5.5, "max": 7.0 }
+    },
+    "soilMoisture": {
+      "value": 55,
+      "unit": "%",
+      "status": "fair",
+      "range": { "min": 50, "max": 70 }
+    }
+  },
+  "lastUpdated": "2025-10-11T14:30:00Z",
+  "favourableConditions": {
+    "Maize": {
+      "temperature": "21-27°C",
+      "humidity": "60-80%",
+      "soilPH": "5.8-7.0",
+      "soilMoisture": "60-75%"
+    },
+    "Tomatoes": {
+      "temperature": "20-25°C",
+      "humidity": "65-85%",
+      "soilPH": "6.0-6.8",
+      "soilMoisture": "70-80%"
+    },
+    "Dairy Cows": {
+      "temperature": "15-25°C",
+      "humidity": "50-70%"
+    },
+    "Poultry": {
+      "temperature": "18-24°C",
+      "humidity": "50-70%"
+    }
+  },
+  "farmingAdvice": {
+    "Maize": [
+      {
+        "stage": "Germination",
+        "duration": "Days 1-10",
+        "advice": "Keep soil moist and use starter fertilizer. Plant at 2-3cm depth with 75cm row spacing."
+      },
+      {
+        "stage": "Vegetative",
+        "duration": "Days 10-50",
+        "advice": "Weed regularly and ensure nitrogen is adequate. Apply first top-dressing at 3-4 weeks."
+      },
+      {
+        "stage": "Flowering",
+        "duration": "Days 50-75",
+        "advice": "Apply pest control and water evenly. Monitor for fall armyworm. Apply second top-dressing."
+      },
+      {
+        "stage": "Maturity",
+        "duration": "Days 75-120",
+        "advice": "Reduce watering and prepare for harvest. Check moisture content before harvesting."
+      }
+    ],
+    "Tomatoes": [
+      {
+        "stage": "Seedling",
+        "duration": "Weeks 1-3",
+        "advice": "Maintain consistent moisture. Provide adequate light and warmth for strong seedlings."
+      },
+      {
+        "stage": "Transplanting",
+        "duration": "Week 4",
+        "advice": "Harden seedlings before transplanting. Plant deeply to encourage root development."
+      },
+      {
+        "stage": "Vegetative Growth",
+        "duration": "Weeks 5-8",
+        "advice": "Stake plants and remove suckers. Apply balanced fertilizer and monitor for pests."
+      },
+      {
+        "stage": "Flowering & Fruiting",
+        "duration": "Weeks 9-16",
+        "advice": "Ensure consistent watering. Apply potassium-rich fertilizer. Control blight and pests."
+      }
+    ]
+  }
+}

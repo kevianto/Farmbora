@@ -1,0 +1,17 @@
+{
+  "id": "user_001",
+  "name": "John Kamau",
+  "email": "john.kamau@example.com",
+  "phone": "+254712345678",
+  "location": {
+    "latitude": -1.2921,
+    "longitude": 36.8219,
+    "city": "Nairobi",
+    "country": "Kenya"
+  },
+  "farmingType": "plant",
+  "plantType": "Maize",
+  "animalType": null,
+  "isAgrovet": false,
+  "createdAt": "2025-01-15T10:30:00Z"
+}

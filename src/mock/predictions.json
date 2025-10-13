@@ -1,0 +1,44 @@
+{
+  "predictions": [
+    {
+      "timeline": "1 day",
+      "rainfallPrediction": "Light showers expected",
+      "rainfallAmount": "5-10mm",
+      "temperaturePrediction": "Stable temperatures",
+      "temperatureRange": "22-26°C",
+      "aiAdvice": "Good conditions for field work. Consider light irrigation if needed."
+    },
+    {
+      "timeline": "1 week",
+      "rainfallPrediction": "Moderate rainfall",
+      "rainfallAmount": "30-50mm",
+      "temperaturePrediction": "Slightly cooler",
+      "temperatureRange": "20-24°C",
+      "aiAdvice": "Expect adequate moisture. Good time for planting. Monitor drainage in low-lying areas."
+    },
+    {
+      "timeline": "1 month",
+      "rainfallPrediction": "Below average rainfall",
+      "rainfallAmount": "60-80mm",
+      "temperaturePrediction": "Above normal",
+      "temperatureRange": "24-28°C",
+      "aiAdvice": "Possible dry spell ahead. Consider mulching to retain moisture. Prepare irrigation systems."
+    },
+    {
+      "timeline": "3 months",
+      "rainfallPrediction": "Above average",
+      "rainfallAmount": "250-300mm",
+      "temperaturePrediction": "Slightly higher than normal",
+      "temperatureRange": "23-27°C",
+      "aiAdvice": "Good rainfall expected. Excellent season for planting. Prepare for possible waterlogging in some areas."
+    },
+    {
+      "timeline": "6 months",
+      "rainfallPrediction": "Mixed pattern",
+      "rainfallAmount": "400-500mm",
+      "temperaturePrediction": "Seasonal variation",
+      "temperatureRange": "20-28°C",
+      "aiAdvice": "Plan for both wet and dry periods. Implement water conservation methods. Consider drought-resistant varieties for risk mitigation."
+    }
+  ]
+}
