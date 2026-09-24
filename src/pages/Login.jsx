@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Sprout, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Sprout, Eye, EyeOff, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -20,96 +20,152 @@ export default function Login() {
     setLoading(true);
 
     if (!email || !password) {
-      setError('Please fill in all fields');
+      setError('Please enter your credentials to continue');
       setLoading(false);
       return;
     }
 
-    setTimeout(() => {
-      const mockUser = {
-        id: 'user_001',
-        email,
-        name: 'John Kamau',
-      };
-
-      login(mockUser);
-
-      const hasProfile = localStorage.getItem('farmbora_profile');
-      if (!hasProfile) {
-        navigate('/profile');
-      } else {
-        navigate('/dashboard');
-      }
-
+    try {
+      await login(email, password);
+      // Let AuthContext fetch profile and handle routing, or we navigate based on profile state
+      // For simplicity, we just go to dashboard and AuthRoute will redirect if needed
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
-  // Demo login function to auto-fill email and password and submit
   const handleDemoLogin = () => {
     setEmail('demo@farmbora.com');
     setPassword('demo1234');
-    handleSubmit(new Event('submit'));  // Trigger form submission programmatically
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden"
-      >
-        <div className="bg-green-600 text-white p-8 text-center">
-          <div className="flex justify-center mb-4">
-            <Sprout className="h-16 w-16" />
+    <div className="min-h-screen bg-white flex flex-col md:flex-row overflow-hidden font-sans">
+      {/* Left Side: Brand & Visuals */}
+      <div className="hidden md:flex md:w-1/2 bg-surface-900 relative p-16 flex-col justify-between overflow-hidden">
+        {/* Abstract Background Elements */}
+        <div className="absolute top-0 right-0 w-full h-full bg-primary-600/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-full h-full bg-primary-900/20 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2"></div>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 flex items-center space-x-3"
+        >
+          <div className="bg-primary-600 p-2.5 rounded-2xl shadow-lg shadow-primary-900/50">
+            <Sprout className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold mb-2">Welcome to FarmBora</h1>
-          <p className="text-green-100">Smart farming for a sustainable future</p>
+          <span className="text-3xl font-black tracking-tight text-white">
+            Farm<span className="text-primary-500">Bora</span>
+          </span>
+        </motion.div>
+
+        <div className="relative z-10">
+          <motion.h1 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-6xl font-black text-white leading-tight tracking-tighter mb-8"
+          >
+            Empowering <br />
+            The Next <span className="text-primary-500 italic">Green</span> <br />
+            Revolution.
+          </motion.h1>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="flex items-center space-x-4 bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-3xl max-w-sm"
+          >
+            <div className="bg-primary-500/20 p-3 rounded-2xl text-primary-400">
+              <ShieldCheck className="h-6 w-6" />
+            </div>
+            <p className="text-surface-300 text-sm font-medium leading-relaxed">
+              Trusted by over 50,000 farmers across the continent for smart irrigation and yield optimization.
+            </p>
+          </motion.div>
         </div>
 
-        <div className="p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Login to Your Account</h2>
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="relative z-10 text-surface-500 text-sm font-bold uppercase tracking-widest"
+        >
+          © 2026 FarmBora • Smart Agri-Solutions
+        </motion.p>
+      </div>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-              {error}
-            </div>
-          )}
+      {/* Right Side: Login Form */}
+      <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-surface-50">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-md"
+        >
+          <div className="mb-10">
+            <h2 className="text-4xl font-black text-surface-900 tracking-tight mb-3">Welcome Back</h2>
+            <p className="text-surface-500 font-bold">Access your farm control center</p>
+          </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <AnimatePresence>
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="bg-rose-50 border border-rose-100 text-rose-700 px-5 py-4 rounded-2xl mb-6 flex items-center space-x-3"
+              >
+                <div className="bg-rose-500 h-2 w-2 rounded-full"></div>
+                <p className="text-sm font-bold">{error}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
+              <label className="block text-xs font-black text-surface-400 uppercase tracking-widest mb-3">
+                Account Email
               </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <div className="relative group">
+                <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-surface-400 group-focus-within:text-primary-600 transition-colors">
+                  <Mail className="h-5 w-5" />
+                </div>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your.email@example.com"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="name@example.com"
+                  className="w-full pl-14 pr-5 py-4 bg-white border border-surface-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all font-bold text-surface-900"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <div className="flex justify-between items-center mb-3">
+                <label className="block text-xs font-black text-surface-400 uppercase tracking-widest">
+                  Secure Password
+                </label>
+                <a href="#" className="text-xs font-black text-primary-600 hover:text-primary-700">Forgot?</a>
+              </div>
+              <div className="relative group">
+                <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-surface-400 group-focus-within:text-primary-600 transition-colors">
+                  <Lock className="h-5 w-5" />
+                </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="••••••••"
+                  className="w-full pl-14 pr-14 py-4 bg-white border border-surface-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all font-bold text-surface-900"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-5 top-1/2 transform -translate-y-1/2 text-surface-400 hover:text-surface-600"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -119,32 +175,41 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="w-full bg-primary-600 text-white py-5 rounded-3xl font-black text-lg shadow-xl shadow-primary-200 hover:bg-primary-700 transition-all disabled:bg-surface-300 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center space-x-3"
             >
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? (
+                <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  <span>Sign In to FarmBora</span>
+                  <ArrowRight className="h-5 w-5" />
+                </>
+              )}
             </button>
           </form>
 
-          {/* Demo Login Button */}
-          <div className="mt-4 text-center">
+          <div className="mt-8">
             <button
               onClick={handleDemoLogin}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors"
+              className="w-full bg-white border border-surface-200 text-surface-900 py-4 rounded-3xl font-black text-sm hover:bg-surface-50 transition-all flex items-center justify-center space-x-3"
             >
-              Use Demo Account
+              <div className="bg-emerald-100 p-1.5 rounded-lg">
+                <Sparkles className="h-4 w-4 text-emerald-600" />
+              </div>
+              <span>Try Demo Account</span>
             </button>
           </div>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
-              Don't have an account?{' '}
-              <Link to="/signup" className="text-green-600 font-semibold hover:text-green-700">
-                Sign up here
+          <div className="mt-12 text-center">
+            <p className="text-surface-500 font-bold text-sm">
+              New to the platform?{' '}
+              <Link to="/signup" className="text-primary-600 font-black hover:text-primary-700 underline underline-offset-4">
+                Create Account
               </Link>
             </p>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 }

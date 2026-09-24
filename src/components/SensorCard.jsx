@@ -1,57 +1,99 @@
 import { motion } from 'framer-motion';
 
 export default function SensorCard({ title, value, unit, status, range, icon: Icon }) {
-  const getStatusColor = () => {
+  const getStatusColors = () => {
     switch (status) {
       case 'optimal':
-        return 'bg-green-100 border-green-500 text-green-800';
+        return {
+          bg: 'bg-emerald-50',
+          border: 'border-emerald-100',
+          text: 'text-emerald-900',
+          icon: 'text-emerald-600',
+          indicator: 'bg-emerald-500',
+          shadow: 'shadow-emerald-100',
+          gradient: 'from-emerald-50 to-white'
+        };
       case 'fair':
-        return 'bg-yellow-100 border-yellow-500 text-yellow-800';
+        return {
+          bg: 'bg-amber-50',
+          border: 'border-amber-100',
+          text: 'text-amber-900',
+          icon: 'text-amber-600',
+          indicator: 'bg-amber-500',
+          shadow: 'shadow-amber-100',
+          gradient: 'from-amber-50 to-white'
+        };
       case 'critical':
-        return 'bg-red-100 border-red-500 text-red-800';
+        return {
+          bg: 'bg-rose-50',
+          border: 'border-rose-100',
+          text: 'text-rose-900',
+          icon: 'text-rose-600',
+          indicator: 'bg-rose-500',
+          shadow: 'shadow-rose-100',
+          gradient: 'from-rose-50 to-white'
+        };
       default:
-        return 'bg-gray-100 border-gray-500 text-gray-800';
+        return {
+          bg: 'bg-slate-50',
+          border: 'border-slate-100',
+          text: 'text-slate-900',
+          icon: 'text-slate-600',
+          indicator: 'bg-slate-500',
+          shadow: 'shadow-slate-100',
+          gradient: 'from-slate-50 to-white'
+        };
     }
   };
 
-  const getStatusBadge = () => {
-    switch (status) {
-      case 'optimal':
-        return 'bg-green-500 text-white';
-      case 'fair':
-        return 'bg-yellow-500 text-white';
-      case 'critical':
-        return 'bg-red-500 text-white';
-      default:
-        return 'bg-gray-500 text-white';
-    }
-  };
+  const colors = getStatusColors();
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={`${getStatusColor()} rounded-lg border-2 p-6 shadow-md hover:shadow-lg transition-shadow`}
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      className={`relative overflow-hidden bg-white rounded-3xl border ${colors.border} p-6 ${colors.shadow} shadow-soft transition-all duration-300`}
     >
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center space-x-3">
+      {/* Background Gradient */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${colors.gradient} opacity-50 -z-10`} />
+      
+      <div className="flex items-center justify-between mb-6">
+        <div className={`p-3 rounded-2xl ${colors.bg} ${colors.icon}`}>
           {Icon && <Icon className="h-6 w-6" />}
-          <h3 className="text-lg font-semibold">{title}</h3>
         </div>
-        <span className={`${getStatusBadge()} px-3 py-1 rounded-full text-xs font-bold uppercase`}>
-          {status}
-        </span>
+        <div className="flex items-center space-x-2">
+          <span className="relative flex h-2 w-2">
+            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${colors.indicator} opacity-75`}></span>
+            <span className={`relative inline-flex rounded-full h-2 w-2 ${colors.indicator}`}></span>
+          </span>
+          <span className={`text-[10px] font-black uppercase tracking-widest ${colors.text} opacity-70`}>
+            {status}
+          </span>
+        </div>
       </div>
 
-      <div className="mb-2">
-        <p className="text-4xl font-bold">
-          {value}{unit}
-        </p>
+      <div>
+        <h3 className="text-surface-500 text-sm font-bold mb-1">{title}</h3>
+        <div className="flex items-baseline space-x-1">
+          <span className="text-4xl font-black text-surface-900 tracking-tight">
+            {value}
+          </span>
+          <span className="text-lg font-bold text-surface-400">{unit}</span>
+        </div>
       </div>
 
       {range && (
-        <div className="text-sm mt-3 opacity-80">
-          <p>Optimal Range: {range.min}{unit} - {range.max}{unit}</p>
+        <div className="mt-6">
+          <div className="flex justify-between text-[10px] font-bold text-surface-400 uppercase tracking-tighter mb-2">
+            <span>Optimal Range</span>
+            <span>{range.min}{unit} - {range.max}{unit}</span>
+          </div>
+          <div className="h-1.5 w-full bg-surface-100 rounded-full overflow-hidden">
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min(100, (value / range.max) * 100)}%` }}
+              className={`h-full ${colors.indicator} rounded-full`}
+            />
+          </div>
         </div>
       )}
     </motion.div>

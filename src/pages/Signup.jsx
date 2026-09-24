@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, Phone, Sprout, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, User, Phone, Sprout, ArrowRight, ShieldCheck, CheckCircle2, Eye, EyeOff } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { motion } from 'framer-motion';
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -16,7 +16,7 @@ export default function Signup() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -32,7 +32,7 @@ export default function Signup() {
     setLoading(true);
 
     if (!formData.name || !formData.email || !formData.phone || !formData.password) {
-      setError('Please fill in all fields');
+      setError('All fields are required to secure your account');
       setLoading(false);
       return;
     }
@@ -44,161 +44,237 @@ export default function Signup() {
     }
 
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError('Security requirement: Password must be at least 6 characters');
       setLoading(false);
       return;
     }
 
-    setTimeout(() => {
-      const mockUser = {
-        id: 'user_' + Date.now(),
-        email: formData.email,
+    try {
+      await register({
         name: formData.name,
+        email: formData.email,
         phone: formData.phone,
-      };
-
-      login(mockUser);
+        password: formData.password
+      });
       navigate('/profile');
+    } catch (err) {
+      setError(err);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden"
-      >
-        <div className="bg-green-600 text-white p-8 text-center">
-          <div className="flex justify-center mb-4">
-            <Sprout className="h-16 w-16" />
+    <div className="min-h-screen bg-white flex flex-col md:flex-row overflow-hidden font-sans">
+      {/* Left Side: Brand & Benefits */}
+      <div className="hidden md:flex md:w-1/2 bg-primary-600 relative p-16 flex-col justify-between overflow-hidden">
+        {/* Abstract Background Decoration */}
+        <div className="absolute top-0 left-0 w-full h-full bg-surface-900/10 -z-0"></div>
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 flex items-center space-x-3"
+        >
+          <div className="bg-white p-2.5 rounded-2xl shadow-lg shadow-primary-700/50">
+            <Sprout className="h-8 w-8 text-primary-600" />
           </div>
-          <h1 className="text-3xl font-bold mb-2">Join FarmBora</h1>
-          <p className="text-green-100">Start your smart farming journey today</p>
+          <span className="text-3xl font-black tracking-tight text-white">
+            Farm<span className="text-primary-950/40">Bora</span>
+          </span>
+        </motion.div>
+
+        <div className="relative z-10">
+          <motion.h1 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-6xl font-black text-white leading-tight tracking-tighter mb-12"
+          >
+            Join The <br />
+            Digital Farming <br />
+            Era.
+          </motion.h1>
+          
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="space-y-6"
+          >
+            {[
+              "Real-time IoT sensor telemetry",
+              "AI-driven predictive analytics",
+              "Transparent B2B marketplace"
+            ].map((benefit, i) => (
+              <div key={i} className="flex items-center space-x-4">
+                <div className="bg-white/20 p-1.5 rounded-full">
+                  <CheckCircle2 className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-white font-bold text-lg">{benefit}</span>
+              </div>
+            ))}
+          </motion.div>
         </div>
 
-        <div className="p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Create Your Account</h2>
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="relative z-10 flex items-center space-x-4 bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-3xl max-w-sm"
+        >
+          <div className="bg-white p-3 rounded-2xl text-primary-600">
+            <ShieldCheck className="h-6 w-6" />
+          </div>
+          <p className="text-white text-sm font-medium leading-relaxed">
+            Over 50,000 farmers already trust our encrypted platform for their daily operations.
+          </p>
+        </motion.div>
+      </div>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-              {error}
-            </div>
-          )}
+      {/* Right Side: Signup Form */}
+      <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-surface-50 overflow-y-auto">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-md py-12"
+        >
+          <div className="mb-10 text-center md:text-left">
+            <h2 className="text-4xl font-black text-surface-900 tracking-tight mb-3">Create Account</h2>
+            <p className="text-surface-500 font-bold">Start your 14-day premium free trial</p>
+          </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <AnimatePresence>
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="bg-rose-50 border border-rose-100 text-rose-700 px-5 py-4 rounded-2xl mb-6 flex items-center space-x-3"
+              >
+                <div className="bg-rose-500 h-2 w-2 rounded-full"></div>
+                <p className="text-sm font-bold">{error}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <label className="block text-[10px] font-black text-surface-400 uppercase tracking-widest mb-2.5">Farmer Name</label>
+              <div className="relative group">
+                <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-surface-400 group-focus-within:text-primary-600 transition-colors">
+                  <User className="h-5 w-5" />
+                </div>
                 <input
                   type="text"
                   name="name"
-                  value={formData.name}
-                  onChange={handleChange}
+                  required
                   placeholder="John Kamau"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
+                  className="w-full pl-14 pr-5 py-4 bg-white border border-surface-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all font-bold text-surface-900"
                   onChange={handleChange}
-                  placeholder="your.email@example.com"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="+254712345678"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2 sm:col-span-1">
+                <label className="block text-[10px] font-black text-surface-400 uppercase tracking-widest mb-2.5">Email Address</label>
+                <div className="relative group">
+                  <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-surface-400 group-focus-within:text-primary-600 transition-colors">
+                    <Mail className="h-5 w-5" />
+                  </div>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    placeholder="name@email.com"
+                    className="w-full pl-14 pr-5 py-4 bg-white border border-surface-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all font-bold text-surface-900 text-xs"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div className="col-span-2 sm:col-span-1">
+                <label className="block text-[10px] font-black text-surface-400 uppercase tracking-widest mb-2.5">Phone Number</label>
+                <div className="relative group">
+                  <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-surface-400 group-focus-within:text-primary-600 transition-colors">
+                    <Phone className="h-5 w-5" />
+                  </div>
+                  <input
+                    type="tel"
+                    name="phone"
+                    required
+                    placeholder="+254"
+                    className="w-full pl-14 pr-5 py-4 bg-white border border-surface-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all font-bold text-surface-900 text-xs"
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Create a password"
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </button>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2 sm:col-span-1">
+                <label className="block text-[10px] font-black text-surface-400 uppercase tracking-widest mb-2.5">Password</label>
+                <div className="relative group">
+                  <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-surface-400 group-focus-within:text-primary-600 transition-colors">
+                    <Lock className="h-5 w-5" />
+                  </div>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    required
+                    placeholder="••••••••"
+                    className="w-full pl-14 pr-5 py-4 bg-white border border-surface-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all font-bold text-surface-900"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div className="col-span-2 sm:col-span-1">
+                <label className="block text-[10px] font-black text-surface-400 uppercase tracking-widest mb-2.5">Confirm</label>
+                <div className="relative group">
+                  <div className="absolute left-5 top-1/2 transform -translate-y-1/2 text-surface-400 group-focus-within:text-primary-600 transition-colors">
+                    <Lock className="h-5 w-5" />
+                  </div>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="confirmPassword"
+                    required
+                    placeholder="••••••••"
+                    className="w-full pl-14 pr-5 py-4 bg-white border border-surface-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all font-bold text-surface-900"
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Confirm Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Confirm your password"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-              </div>
+            <div className="pt-4">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-primary-600 text-white py-5 rounded-3xl font-black text-lg shadow-xl shadow-primary-200 hover:bg-primary-700 transition-all disabled:bg-surface-300 disabled:cursor-not-allowed flex items-center justify-center space-x-3"
+              >
+                {loading ? (
+                  <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                ) : (
+                  <>
+                    <span>Create Farm Account</span>
+                    <ArrowRight className="h-5 w-5" />
+                  </>
+                )}
+              </button>
             </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Creating Account...' : 'Sign Up'}
-            </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
-              Already have an account?{' '}
-              <Link to="/login" className="text-green-600 font-semibold hover:text-green-700">
-                Login here
+          <div className="mt-10 text-center">
+            <p className="text-surface-500 font-bold text-sm">
+              Member already?{' '}
+              <Link to="/login" className="text-primary-600 font-black hover:text-primary-700 underline underline-offset-4">
+                Sign In Instead
               </Link>
             </p>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 }

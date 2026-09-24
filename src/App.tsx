@@ -11,14 +11,15 @@ import Market from './pages/Market';
 import Alerts from './pages/Alerts';
 import About from './pages/About';
 import Settings from './pages/Settings';
+import Landing from './pages/Landing';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-600">Loading...</p>
+      <div className="flex items-center justify-center min-h-screen bg-surface-50">
+        <div className="w-12 h-12 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -37,6 +38,7 @@ function AppRoutes() {
     <>
       <Navbar />
       <Routes>
+        <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Landing />} />
         <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
         <Route path="/signup" element={user ? <Navigate to="/dashboard" /> : <Signup />} />
         <Route
@@ -95,7 +97,6 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-        <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
       {user && <Chatbot />}
     </>
